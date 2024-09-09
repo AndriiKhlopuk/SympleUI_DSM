@@ -44,6 +44,9 @@
         "HTMLdocument_ready": "",
         "PyGeneral": "",
         "PelicanInit": "",
-        "uid": "7a07d29acb634200b6d764292789b28a"
+        "uid": "7a07d29acb634200b6d764292789b28a",
+        "GitHubHandlers": "https://api.github.com/repos/AndriiKhlopuk/SympleUI_DSM/contents/DSM.py",
+        "GitHubToken": "",
+        "PyHandlers": "I3Rlc3QK"
     }
 }
