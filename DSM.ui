@@ -1,0 +1,49 @@
+{
+    "ClientConfiguration": {
+        "ConfigurationName": "SympleUI_DSM",
+        "ConfigurationDescription": "SympleUI_DSM",
+        "ConfigurationVersion": "0.0.1",
+        "Processes": [
+            {
+                "type": "Process",
+                "ProcessName": "Новый процесс",
+                "Operations": [
+                    {
+                        "type": "Operation",
+                        "Name": "Новый экран",
+                        "Elements": []
+                    }
+                ]
+            }
+        ],
+        "ConfigurationSettings": {
+            "uid": "40305e1f57d2496ea9a9610d5f1425c9",
+            "dictionaries": "",
+            "vendor": "",
+            "vendor_url": "",
+            "vendor_password": "",
+            "handler_split_mode": false,
+            "handler_url": "",
+            "handler_password": ""
+        },
+        "host_uid": "49f63bdc5c9c457ca4b79b50290eed69",
+        "ConfigurationTags": "",
+        "ConfigurationFileName": "DSM",
+        "agent": false,
+        "ForegroundService": false,
+        "StopForegroundServiceOnExit": false,
+        "BroadcastIntent": "",
+        "BroadcastVariable": "",
+        "FaceRecognitionURL": "",
+        "OnKeyboardMain": false,
+        "LaunchProcess": "",
+        "LaunchVar": "",
+        "MenuWebTemplate": "",
+        "Launch": "",
+        "HTMLHead": "",
+        "HTMLdocument_ready": "",
+        "PyGeneral": "",
+        "PelicanInit": "",
+        "uid": "7a07d29acb634200b6d764292789b28a"
+    }
+}
