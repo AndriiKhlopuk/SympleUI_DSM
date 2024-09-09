@@ -1,6 +1,7 @@
 import json
 
-def sample1_on_create(hashMap,_files=None,_data=None):
+
+def sample1_on_create(hashMap, _files=None, _data=None):
     if not hashMap.containsKey("a"):
         hashMap.put("a", "")
     if not hashMap.containsKey("b"):
@@ -13,3 +14,4 @@ def sample1_on_input(hashMap, _files=None, _data=None):
         hashMap.put("toast", str(int(hashMap.get("a")) + int(hashMap.get("b"))))
 
     return hashMap
+
