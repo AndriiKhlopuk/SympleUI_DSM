@@ -1,592 +1,259 @@
-import json
-from ru.travelfood.simple_ui import SimpleUtilites as suClass
-import random
 
+import json
+from ru.travelfood.simple_ui import SimpleSQLProvider as sqlClass
 
 def init(hashMap,_files=None,_data=None):
-
     hashMap.put("SQLConnectDatabase","test55.DB")
-     
+    #А вот так должно быть соединение с основной базой (которая была всегда)
+    #hashMap.put("SQLConnectDatabase","") 
+    hashMap.put("SQLExec",json.dumps({"query":"create table IF NOT EXISTS goods (id integer primary key autoincrement,art text, barcode text, nom text)","params":""}))
+    
     return hashMap
 
-def longroutine(hashMap,_files=None,_data=None):
+def scr1_input(hashMap,_files=None,_data=None):
     import time
-    time.sleep(3)
+    time.sleep(2)
     
-    hashMap.put("beep","")
-    hashMap.put("ShowScreen","Экран2")
-    return hashMap 
+    
+    return hashMap
 
-def testprogress(hashMap,_files=None,_data=None):
-    hashMap.put("RunPyThreadProgressDef","longroutine")
-        
+def scr1_on_start(hashMap,_files=None,_data=None):
+    
+    hashMap.put("val1","... значение установлено в обработчике")
+    
+    
+    return hashMap
+
+def scr1_beep(hashMap,_files=None,_data=None):
+    
+    hashMap.put("beep","55")
+    
+    
     return hashMap    
 
-def longroutine2(hashMap,_files=None,_data=None):
+def post_online(hashMap,_files=None,_data=None):
     import time
-    time.sleep(3)
-
-    hashMap.put("label1","Установлено асинхронно")
+    time.sleep(2)
+    hashMap.put("vibrate","")
+    hashMap.put("beep","")
+    hashMap.put("speak","спали 2 секунды")
+    hashMap.put("speak","А сейчас - завершился асинхронный.")
     
+    return hashMap    
+
+def scr1_input_prepare(hashMap,_files=None,_data=None):
+    hashMap.put("after","Сразу после")
+    hashMap.put("toast","Сейчас выполнился синхронный обработчик, параллельно началось выполнение асинхронного. Экран не блокируется можно работать с приложением")
+    
+    return hashMap        
+
+def cv_after(hashMap,_files=None,_data=None):
+    
+    hashMap.put("toast",hashMap.get("current_object"))
+    
+    return hashMap  
+
+
+def other_open(hashMap,_files=None,_data=None):
+        
+    hashMap.put("mm_local","") 
+    return hashMap    
+
+def other_input(hashMap,_files=None,_data=None):
+   
+    
+    hashMap.put("toast",hashMap.get("listener"))
+
+    if hashMap.get("listener")=="btns":
+        if hashMap.get("btns")=="Сохранение настроек":
+            hashMap.put("SetSettingsJSON",json.dumps({"torch":True}))
+        if hashMap.get("btns")=="Открыть камеру":
+            hashMap.put("noRefresh","") 
+            hashMap.put("StartCaptureCamera","photo_from_camera")    
+        if hashMap.get("btns")=="Открыть галерею":
+            hashMap.put("noRefresh","") 
+            hashMap.put("StartMediaGallery","photo_from_camera")    
+    elif hashMap.get("listener")=="photo":
+        hashMap.put("toast",hashMap.get("photo_from_camera"))
+    return hashMap 
+
+def manual_after(hashMap,_files=None,_data=None):
+        
+    hashMap.put("toast","Все") 
+    return hashMap  
+
+def manual_input(hashMap,_files=None,_data=None):
+    if hashMap.get("listener")=="btn_run":    
+        hashMap.put("RunEvent",json.dumps([{"action": "run","type": "python","method": "post_online", "postExecute": "" }])) 
+    elif hashMap.get("listener")=="btn_run_async":   
+        hashMap.put("RunEvent",json.dumps([{"action": "runasync","type": "python","method": "post_online", "postExecute": json.dumps([{"action": "run","type": "python","method": "manual_after"}])  }])) 
+
+    return hashMap  
+
+
+def sql_input(hashMap,_files=None,_data=None):
+   
+
+    if hashMap.get("listener")=="run_execsql_many":  
+        sql = sqlClass()
+        values=[]
+        for i in range(1,10000):
+            record =[]
+            record.append("A"+str(i))
+            record.append(str(i))
+            record.append("Товар"+str(i))
+            values.append(record)
+
+
+        sql.SQLExecMany("insert into goods(art,barcode,nom) values(?,?,?)",json.dumps(values,ensure_ascii=False))
+       
+        hashMap.put("beep","") 
+   
+    return hashMap  
+
+def sql_check(hashMap,_files=None,_data=None):
+   
+
+    if len(hashMap.get("name"))==0 or hashMap.get("name")==None:  
+               
+        hashMap.put("beep","") 
+        hashMap.put("BreakHandlers","") 
+        hashMap.put("toast","Не заполнено наименование") 
+
+    if len(hashMap.get("barcode"))==0 or len(hashMap.get("barcode"))==None:  
+               
+        hashMap.put("beep","") 
+        hashMap.put("BreakHandlers","") 
+        hashMap.put("toast","Не заполнен штрихкод")     
+
+        
+   
+    return hashMap 
+
+def sql_insert_var(hashMap,_files=None,_data=None):
+
+    values=[]
+    for i in range(1,3):
+        record =[]
+        record.append("AA"+str(i))
+        record.append("22"+str(i))
+        record.append("Товар вручную "+str(i))
+        values.append(record)
+   
+    hashMap.put("SQLParameter",json.dumps(values,ensure_ascii=False))     
+
+    return hashMap     
+
+
+def save_http_settings(hashMap,_files=None,_data=None):
+      
+    hashMap.put("HTTPAddAlias",json.dumps({"alias":"odata","url":hashMap.get("url"),"headers":{"Content-Type":"application/json; charset=utf-8","Accept":"*/*"},"basic":{"user":hashMap.get("user"),"password":hashMap.get("password")}},ensure_ascii=False))     
+
+    return hashMap     
+
+def calculate_async(hashMap,_files=None,_data=None):
+
+    import time
+    time.sleep(3) 
+    
+    hashMap.put("res",str(int(hashMap.get("a"))+int(hashMap.get("b"))))
+    hashMap.put("vibrate","")
     hashMap.put("RefreshScreen","")
     
-    return hashMap
+    return hashMap    
 
-def longroutine_progress_notification(hashMap,_files=None,_data=None):
-    import time
-
-    suClass.UpdateProgressNotification(json.dumps({"id":111,"progress":0,"title":"Title","body":"Main text"}))
-
-  
-    time.sleep(3)
-    suClass.UpdateProgressNotification(json.dumps({"id":111,"progress":25,"title":"Title","body":"Main text"}))
-    time.sleep(2)
-    suClass.UpdateProgressNotification(json.dumps({"id":111,"progress":50,"title":"Title","body":"Main text"}))
-    time.sleep(2)
-    suClass.UpdateProgressNotification(json.dumps({"id":111,"progress":75,"title":"Title","body":"Main text"}))
-    time.sleep(2)
-    suClass.UpdateProgressNotification(json.dumps({"id":111,"progress":100,"title":"Title","body":"Main text"}))
-
+def play_beep(hashMap,_files=None,_data=None):
    
     
+    hashMap.put("beep","")
+    
+    
+    return hashMap    
+
+def test(hashMap,_files=None,_data=None):
+   
+    
+    hashMap.put("beep","10")
+   
+    
+    
+    return hashMap 
+
+def datachange(hashMap,_files=None,_data=None):
+   
+    
+    
+    hashMap.put("toast",hashMap.get("listener"))
+    
+    
+    return hashMap     
+
+def open_file(hashMap,_files=None,_data=None):
+   
+    
+    
+    hashMap.put("speak",hashMap.get("content")+"/"+hashMap.get("extra_text"))
+
+    #Обязательно нужно отключать стандартную обработку OffStandardListener и обработчики должны быть в синхронном режиме
+
+    hashMap.put("OffStandardListener","true")
+    hashMap.put("reply_notification",json.dumps([{"number":5,"title":"Опрос","message":hashMap.get("content")}],ensure_ascii=False))
+    
+
+    
+    
+    return hashMap                
+
+def input_select_command(hashMap,_files=None,_data=None):
+    
+    hashMap.put("SQLQuery",json.dumps({"query":"select * from goods where id=?","params":"2"}))
+    
     return hashMap
 
-def openobjectslist_on_open(hashMap,_files=None,_data=None):
+def input_execmany_command(hashMap,_files=None,_data=None):
     
-    j = { "customcards":         {
-            "options":{
-              "search_enabled":True,
-              "save_position":True
+    values=[]
+    for i in range(1,3):
+        record =[]
+        record.append("AA"+str(i))
+        record.append("22"+str(i))
+        record.append("Товар через переменную "+str(i))
+        values.append(record)
+   
+   
+    hashMap.put("SQLExecMany",json.dumps({"query":"insert into goods(art,barcode,nom) values(?,?,?)","params":json.dumps(values,ensure_ascii=False)}))
+    
+    return hashMap    
+
+def input_class_input(hashMap,_files=None,_data=None):
+    
+    sql = sqlClass()
+
+    success=sql.SQLExec("insert into goods(art,barcode,nom) values(?,?,?)","111222,22000332323,Некий товар")
+    res = sql.SQLQuery("select * from goods where id=1","")
+    if success:    
+        hashMap.put("toast",res) 
+    else:
+        hashMap.put("toast","Ашипка")             
+    
+    return hashMap
+
+def periodic1(hashMap,_files=None,_data=None):
+    import random
+    
+    #эта функция , также как и periodic2 - для проверки параллельной работы с СУБД из разных подключений
+
+    #содержимое закоментировано, чтобы не мешало проверять другие. Для проверки этого обработчика можно раскомментировать
+
+
+    # sql = sqlClass()
+
+    # success=sql.SQLExec("update goods set nom=? where id=1","Periodic -"+str(random.randint(10, 10000)))
+    # res = sql.SQLQuery("select * from goods where id=1","")
+    # if success:    
+        
+    #     hashMap.put("beep","15") 
             
-
-            },
-            "layout": {
-            "type": "LinearLayout",
-            "orientation": "vertical",
-            "height": "match_parent",
-            "width": "match_parent",
-            "weight": "0",
-            "Elements": [
-            {
-                "type": "LinearLayout",
-                "orientation": "horizontal",
-                "height": "wrap_content",
-                "width": "match_parent",
-                "weight": "0",
-                "Elements": [
-                
-                {
-                "type": "LinearLayout",
-                "orientation": "vertical",
-                "height": "wrap_content",
-                "width": "match_parent",
-                "weight": "1",
-                "Elements": [
-                {
-                    "type": "TextView",
-                    "show_by_condition": "",
-                    "Value": "@string1",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": "",
-                    "Variable": ""
-                },
-                {
-                    "type": "TextView",
-                    "show_by_condition": "",
-                    "Value": "@string2",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": "",
-                    "Variable": ""
-                },
-                {
-                    "type": "TextView",
-                    "show_by_condition": "",
-                    "Value": "@string3",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": "",
-                    "Variable": ""
-                }
-                ]
-                },
-                {
-                "type": "TextView",
-                "show_by_condition": "",
-                "Value": "@val",
-                "NoRefresh": False,
-                "document_type": "",
-                "mask": "",
-                "Variable": "",
-                "TextSize": "16",
-                "TextColor": "#DB7093",
-                "TextBold": True,
-                "TextItalic": False,
-                "BackgroundColor": "",
-                "width": "match_parent",
-                "height": "wrap_content",
-                "weight": 2
-                }
-                ]
-            },
-            {
-                "type": "TextView",
-                "show_by_condition": "",
-                "Value": "@descr",
-                "NoRefresh": False,
-                "document_type": "",
-                "mask": "",
-                "Variable": "",
-                "TextSize": "-1",
-                "TextColor": "#6F9393",
-                "TextBold": False,
-                "TextItalic": True,
-                "BackgroundColor": "",
-                "width": "wrap_content",
-                "height": "wrap_content",
-                "weight": 0
-            }
-            ]
-        }
-
-    }
-    }
-   
-    j["customcards"]["cardsdata"]=[]
-    for i in range(0,5):
-      if i==0:
-        c =  {
-       
-          "group": "Комплектующие"
-       
-        }
-      
-        j["customcards"]["cardsdata"].append(c)
-
-      if i==4:
-        c =  {
-       
-          "group": "Уценка"
-       
-        }
-      
-        j["customcards"]["cardsdata"].append(c)   
-
-      price =  str(random.randint(10, 10000))+" руб." 
-      c =  {
-        "key": "Материнская плата ASUS ROG MAXIMUS Z690 APEX"+", "+str(price),
-       
-        "descr": "Pos. "+str(i),
-        "val": str(price)+" руб.",
-        "string1": "Материнская плата ASUS ROG MAXIMUS Z690 APEX",
-        "string2": "Гнездо процессора LGA 1700",
-        "string3": "Частотная спецификация памяти 4800 МГц"
-      }
-      
-      j["customcards"]["cardsdata"].append(c)
-
-    if not hashMap.containsKey("cards"):
-      hashMap.put("cards",json.dumps(j,ensure_ascii=False).encode('utf8').decode())
     
     return hashMap
-
-
-def units_on_open(hashMap,_files=None,_data=None):
     
-    j = { "customcards":         {
-            "options":{
-              "search_enabled":True,
-              "save_position":True
-              
-
-            },
-            "layout": {
-            "type": "LinearLayout",
-            "orientation": "vertical",
-            "height": "match_parent",
-            "width": "match_parent",
-            "weight": "0",
-            "Elements": [
-            {
-                "type": "LinearLayout",
-                "orientation": "horizontal",
-                "height": "wrap_content",
-                "width": "match_parent",
-                "weight": "0",
-                "Elements": [
-                
-                {
-                "type": "LinearLayout",
-                "orientation": "vertical",
-                "height": "wrap_content",
-                "width": "match_parent",
-                "weight": "1",
-                "Elements": [
-                {
-                    "type": "TextView",
-                    "show_by_condition": "",
-                    "Value": "@string1",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": "",
-                    "Variable": ""
-                },
-                {
-                    "type": "TextView",
-                    "show_by_condition": "",
-                    "Value": "@string2",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": "",
-                    "Variable": ""
-                },
-                {
-                    "type": "TextView",
-                    "show_by_condition": "",
-                    "Value": "@string3",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": "",
-                    "Variable": ""
-                }
-                ]
-                }
-                ]
-            }
-            ]
-        }
-
-    }
-    }
-   
-    j["customcards"]["cardsdata"]=[]
-
-    c =  {
-        "key": "Шт",
-       
-        
-        "val": "001",
-        "string1": "Шт.",
-        "string2": "Количество в упаковке=1",
-        "string3": "Штуки"
-      }
-      
-    j["customcards"]["cardsdata"].append(c)
-
-    c =  {
-        "key": "Кг",
-       
-        
-        "val": "001",
-        "string1": "Кг.",
-        "string2": "Количество в упаковке=1",
-        "string3": "Килограммы"
-      }
-      
-    j["customcards"]["cardsdata"].append(c)
-
-    c =  {
-        "key": "Упак",
-       
-        
-        "val": "001",
-        "string1": "Упак.",
-        "string2": "Количество в упаковке=1",
-        "string3": "Упаковки"
-      }
-      
-    j["customcards"]["cardsdata"].append(c)
-
-    
-
-    if not hashMap.containsKey("cards"):
-      hashMap.put("cards",json.dumps(j,ensure_ascii=False).encode('utf8').decode())
-    
-    return hashMap
-
-def card_input(hashMap,_files=None,_data=None):
-    
-   
-   hashMap.put(hashMap.get("field"),hashMap.get("selected_card_key"))
-
-   hashMap.put("FinishProcessResult","")
-
-    
-   return hashMap
-
-
-
-def testargs(hashMap,*args):
- 
-   
-  
-  hashMap.put("vibrate","")
-  hashMap.put("toast",args[0]+args[1]+args[2])
-
-  return hashMap
-
-def set_list_search(hashMap,_files=None,_data=None):
-    
-   
-   
-
-    j = { "customcards":         {
-            "options":{
-              "search_enabled":True,
-              "save_position":True,
-              "override_search":True
-
-            },
-            "layout": {
-            "type": "LinearLayout",
-            "orientation": "vertical",
-            "height": "match_parent",
-            "width": "match_parent",
-            "weight": "0",
-            "Elements": [
-            {
-                "type": "LinearLayout",
-                "orientation": "horizontal",
-                "height": "wrap_content",
-                "width": "match_parent",
-                "weight": "0",
-                "Elements": [
-                {
-                "type": "CheckBox",
-                "Value": "@cb1",
-                "NoRefresh": False,
-                "document_type": "",
-                "mask": "",
-                "Variable": "cb1",
-                "BackgroundColor": "#DB7093",
-                "width": "match_parent",
-                "height": "wrap_content",
-                "weight": 2
-                },
-                {
-                "type": "LinearLayout",
-                "orientation": "vertical",
-                "height": "wrap_content",
-                "width": "match_parent",
-                "weight": "1",
-                "Elements": [
-                {
-                    "type": "TextView",
-                    "show_by_condition": "",
-                    "Value": "@string1",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": "",
-                    "Variable": ""
-                },
-                {
-                    "type": "TextView",
-                    "show_by_condition": "",
-                    "Value": "@string2",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": "",
-                    "Variable": ""
-                },
-                {
-                    "type": "TextView",
-                    "show_by_condition": "",
-                    "Value": "@string3",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": "",
-                    "Variable": ""
-                },
-                {
-                    "type": "Button",
-                    "show_by_condition": "",
-                    "Value": "#f290",
-                    "TextColor": "#DB7093",
-                    "Variable": "btn_tst1",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": ""
-                    
-                },
-                {
-                    "type": "Button",
-                    "show_by_condition": "",
-                    "Value": "#f469",
-                    "TextColor": "#DB7093",
-                    "Variable": "btn_tst2",
-                    "NoRefresh": False,
-                    "document_type": "",
-                    "mask": ""
-                    
-                }
-                ]
-                },
-                {
-                "type": "TextView",
-                "show_by_condition": "",
-                "Value": "@val",
-                "NoRefresh": False,
-                "document_type": "",
-                "mask": "",
-                "Variable": "",
-                "TextSize": "16",
-                "TextColor": "#DB7093",
-                "TextBold": True,
-                "TextItalic": False,
-                "BackgroundColor": "",
-                "width": "match_parent",
-                "height": "wrap_content",
-                "weight": 2
-                },
-               {
-                "type": "PopupMenuButton",
-                "show_by_condition": "",
-                "Value": "Удалить;Проверить",
-                "NoRefresh": False,
-                "document_type": "",
-                "mask": "",
-                "Variable": "menu_delete"
-                
-                }
-                ]
-            },
-            {
-                "type": "TextView",
-                "show_by_condition": "",
-                "Value": "@descr",
-                "NoRefresh": False,
-                "document_type": "",
-                "mask": "",
-                "Variable": "",
-                "TextSize": "-1",
-                "TextColor": "#6F9393",
-                "TextBold": False,
-                "TextItalic": True,
-                "BackgroundColor": "",
-                "width": "wrap_content",
-                "height": "wrap_content",
-                "weight": 0
-            }
-            ]
-        }
-
-    }
-    }
-   
-    j["customcards"]["cardsdata"]=[]
-    for i in range(0,5):
-      if i==0:
-        c =  {
-       
-          "group": "Комплектующие"
-       
-        }
-      
-        j["customcards"]["cardsdata"].append(c)
-
-      if i==4:
-        c =  {
-       
-          "group": "Уценка"
-       
-        }
-      
-        j["customcards"]["cardsdata"].append(c)   
-
-    price =  str(random.randint(10, 10000))+" руб." 
-    c =  {
-        "key": "Материнская плата ASUS ROG MAXIMUS Z690 APEX"+", "+str(price),
-       
-        "descr": "Pos. "+str(i),
-        "val": str(price)+" руб.",
-        "string1": "Материнская плата ASUS ROG MAXIMUS Z690 APEX",
-        "string2": "Гнездо процессора LGA 1700",
-        "string3": "Частотная спецификация памяти 4800 МГц"
-      }
-      
-    j["customcards"]["cardsdata"].append(c)
-
-    
-    hashMap.put("cards",json.dumps(j,ensure_ascii=False).encode('utf8').decode())
-    hashMap.put("toast",hashMap.get("cards"))
-
-    
-    return hashMap
-
-def map_on_start(hashMap,_files=None,_data=None):
-   import os
-    
-   filename = suClass.get_temp_dir()+os.sep+"test_map.sug"
-   
-   hashMap.put("mapname",filename)
-
-   
-
-    
-   return hashMap
-
-def show_pin(hashMap,_files=None,_data=None):
-    
-   h=[{"action":"run","type":"python","listener":"pin_success","method":"check_pin"},
-               {"action":"run","type":"set","listener":"pin_cancel","method":"vibrate"}
-               ]
-   hashMap.put("ShowPIN",json.dumps({"header":"Введите ПИН","handlers":h,"block_cancel":False},ensure_ascii=False))
-
-    
-   return hashMap
-
-def check_pin(hashMap,_files=None,_data=None):
-    
-   hashMap.put("toast",hashMap.get("pin"))
-
-   if hashMap.get("pin")=="1111":
-      hashMap.put("beep","")
-      hashMap.put("ClosePIN","")
-   
-    
-   return hashMap
-
-
-def show_biometric(hashMap,_files=None,_data=None):
-    
-   h=[{"action":"run","type":"python","listener":"BiometricAuthenticationSucceeded","method":"biometric_success"},
-               {"action":"run","type":"set","listener":"BiometricAuthenticationFailed","method":"app_shutdown"},
-               {"action":"run","type":"set","listener":"BiometricAuthenticationError","method":"app_shutdown"}
-               ]
-   hashMap.put("ShowBiometric",json.dumps({"title":"Проверка входа","body":"Необходима аутенификация","handlers":h},ensure_ascii=False))
-
-    
-   return hashMap
-
-def biometric_success(hashMap,_files=None,_data=None):
-    
-   hashMap.put("toast","willkommen zurück")
-
-   
-    
-   return hashMap
-
-def biometric_success(hashMap,_files=None,_data=None):
-    
-   hashMap.put("toast","willkommen zurück")
-
-   
-    
-   return hashMap
-
-def highlight_lists(hashMap,_files=None,_data=None):
-    
-   hashMap.put("SetRed","et1;et2;et3")
-   hashMap.put("SetGreen","et5;et6;et7")
-
-   
-    
-   return hashMap
-
-def foo(hashMap,*args):
-    param1 =  args[0] 
-    param2 =  args[1] 
-    param3 =  args[2]  
-
-    return hashMap
