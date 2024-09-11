@@ -115,4 +115,3 @@ def settings_on_input(hashMap,_files=None,_data=None):
             hashMap.put("setLocale","en")      
     
     return hashMap    
-
