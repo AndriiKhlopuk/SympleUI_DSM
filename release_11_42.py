@@ -1,4 +1,3 @@
-
 import json
 from ru.travelfood.simple_ui import SimpleSQLProvider as sqlClass
 
