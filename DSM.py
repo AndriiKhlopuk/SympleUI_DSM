@@ -15,3 +15,9 @@ def sample1_on_input(hashMap, _files=None, _data=None):
 
     return hashMap
 
+
+def input_qty(hashMap, _files=None, _data=None):
+    hashMap.put("ShowScreen", "Сканирование штрихкода")
+    hashMap.put("toast", "Добавлено")
+
+    return hashMap

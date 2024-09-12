@@ -4,32 +4,17 @@
         "ConfigurationDescription": "SympleUI_DSM",
         "ConfigurationVersion": "0.0.1",
         "Processes": [
-             {
+            {
                 "type": "Process",
                 "ProcessName": "Пример ввода и обработчика",
                 "PlanFactHeader": "План-факт",
-                "DefineOnBackPressed": false,
-                "hidden": false,
-                "login_screen": false,
-                "SC": false,
                 "Operations": [
                     {
                         "type": "Operation",
                         "Name": "Экран a+b",
-                        "Timer": false,
-                        "hideToolBarScreen": false,
-                        "noScroll": false,
-                        "handleKeyUp": false,
-                        "noConfirmation": false,
                         "hideBottomBarScreen": true,
-                        "onlineOnStart": false,
-                        "send_when_opened": false,
-                        "onlineOnInput": false,
-
                         "Elements": [
                             {
-                                "Value": "",
-                                "Variable": "",
                                 "type": "LinearLayout",
                                 "weight": "0",
                                 "height": "match_parent",
@@ -42,15 +27,17 @@
                                         "width": "match_parent",
                                         "weight": "0",
                                         "Value": "Переменная a",
-                                        "Variable": ""
+                                        "width_value": "match_parent",
+                                        "height_value": "wrap_content"
                                     },
                                     {
                                         "type": "EditTextNumeric",
                                         "height": "wrap_content",
                                         "width": "match_parent",
                                         "weight": "0",
-                                        "Value": "",
-                                        "Variable": "a"
+                                        "Variable": "a",
+                                        "width_value": "match_parent",
+                                        "height_value": "wrap_content"
                                     },
                                     {
                                         "type": "TextView",
@@ -58,15 +45,17 @@
                                         "width": "match_parent",
                                         "weight": "0",
                                         "Value": "Переменная b",
-                                        "Variable": ""
+                                        "width_value": "match_parent",
+                                        "height_value": "wrap_content"
                                     },
                                     {
                                         "type": "EditTextNumeric",
                                         "height": "wrap_content",
                                         "width": "match_parent",
                                         "weight": "0",
-                                        "Value": "",
-                                        "Variable": "b"
+                                        "Variable": "b",
+                                        "width_value": "match_parent",
+                                        "height_value": "wrap_content"
                                     },
                                     {
                                         "type": "Button",
@@ -74,15 +63,15 @@
                                         "width": "wrap_content",
                                         "weight": "0",
                                         "Value": "a+b=",
-                                        "Variable": "btn_res"
+                                        "Variable": "btn_res",
+                                        "width_value": "wrap_content",
+                                        "height_value": "wrap_content"
                                     }
                                 ],
-                                "BackgroundColor": "",
-                                "StrokeWidth": "",
-                                "Padding": ""
+                                "width_value": "match_parent",
+                                "height_value": "match_parent"
                             }
                         ],
-                        "onlineOnAfterStart": false,
                         "Handlers": [
                             {
                                 "event": "onStart",
@@ -97,6 +86,162 @@
                                 "type": "python",
                                 "method": "sample1_on_input",
                                 "postExecute": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "ProcessName": "Сканирование товара",
+                "type": "Process",
+                "Operations": [
+                    {
+                        "type": "Operation",
+                        "Name": "Сканирование штрихкода",
+                        "hideToolBarScreen": true,
+                        "hideBottomBarScreen": true,
+                        "Elements": [
+                            {
+                                "type": "LinearLayout",
+                                "orientation": "vertical",
+                                "height": "match_parent",
+                                "width": "match_parent",
+                                "Elements": [
+                                    {
+                                        "type": "TextView",
+                                        "orientation": "vertical",
+                                        "height": "wrap_content",
+                                        "width": "match_parent",
+                                        "Value": "Сканируйте штрихкод",
+                                        "BackgroundColor": "#3f64a1",
+                                        "TextSize": "25",
+                                        "TextColor": "#ffffff",
+                                        "TextBold": true,
+                                        "type_s": "Надпись",
+                                        "weight": "0",
+                                        "width_value": "match_parent",
+                                        "height_value": "wrap_content"
+                                    },
+                                    {
+                                        "type": "TableLayout",
+                                        "orientation": "vertical",
+                                        "height": "match_parent",
+                                        "width": "match_parent",
+                                        "Value": "@table",
+                                        "Variable": "talble_click",
+                                        "type_s": "Таблица",
+                                        "weight": "0",
+                                        "width_value": "match_parent",
+                                        "height_value": "match_parent"
+                                    }
+                                ],
+                                "type_s": "Контейнер",
+                                "weight": "0",
+                                "width_value": "match_parent",
+                                "height_value": "match_parent"
+                            },
+                            {
+                                "type": "barcode",
+                                "orientation": "vertical",
+                                "height": "match_parent",
+                                "width": "match_parent",
+                                "Variable": "barcode",
+                                "type_s": "Штрихкод",
+                                "weight": "0",
+                                "width_value": "match_parent",
+                                "height_value": "match_parent"
+                            }
+                        ],
+                        "Handlers": [
+                            {
+                                "event": "onInput",
+                                "action": "run",
+                                "listener": "",
+                                "type": "online",
+                                "method": "getBarcode",
+                                "postExecute": "",
+                                "alias": ""
+                            }
+                        ]
+                    },
+                    {
+                        "type": "Operation",
+                        "Name": "Ввод количества",
+                        "hideBottomBarScreen": true,
+                        "Elements": [
+                            {
+                                "type": "LinearLayout",
+                                "orientation": "vertical",
+                                "height": "wrap_content",
+                                "width": "match_parent",
+                                "Elements": [
+                                    {
+                                        "type": "TextView",
+                                        "orientation": "vertical",
+                                        "height": "wrap_content",
+                                        "width": "match_parent",
+                                        "gravity_horizontal": "center",
+                                        "Value": "Введите количество",
+                                        "BackgroundColor": "#3f64a1",
+                                        "weight": "1",
+                                        "TextSize": "25",
+                                        "TextColor": "#ffffff",
+                                        "TextBold": true,
+                                        "type_s": "Надпись",
+                                        "width_value": "match_parent",
+                                        "height_value": "wrap_content"
+                                    },
+                                    {
+                                        "type": "TextView",
+                                        "orientation": "vertical",
+                                        "height": "wrap_content",
+                                        "width": "match_parent",
+                                        "Value": "@nom",
+                                        "weight": "3",
+                                        "TextSize": "20",
+                                        "type_s": "Надпись",
+                                        "width_value": "match_parent",
+                                        "height_value": "wrap_content"
+                                    },
+                                    {
+                                        "type": "LinearLayout",
+                                        "orientation": "horizontal",
+                                        "height": "wrap_content",
+                                        "width": "match_parent",
+                                        "weight": "4",
+                                        "Elements": [
+                                            {
+                                                "type": "TextView",
+                                                "orientation": "vertical",
+                                                "height": "wrap_content",
+                                                "width": "match_parent",
+                                                "Value": "Количество:",
+                                                "weight": "1",
+                                                "type_s": "Надпись",
+                                                "width_value": "match_parent",
+                                                "height_value": "wrap_content"
+                                            },
+                                            {
+                                                "type": "EditTextNumeric",
+                                                "orientation": "vertical",
+                                                "height": "wrap_content",
+                                                "width": "match_parent",
+                                                "Variable": "qty",
+                                                "weight": "1",
+                                                "type_s": "Поле ввода число",
+                                                "width_value": "match_parent",
+                                                "height_value": "wrap_content"
+                                            }
+                                        ],
+                                        "type_s": "Контейнер",
+                                        "width_value": "match_parent",
+                                        "height_value": "wrap_content"
+                                    }
+                                ],
+                                "type_s": "Контейнер",
+                                "weight": "0",
+                                "width_value": "match_parent",
+                                "height_value": "wrap_content"
                             }
                         ]
                     }
@@ -134,7 +279,7 @@
         "uid": "7a07d29acb634200b6d764292789b28a",
         "GitHubHandlers": "https://api.github.com/repos/AndriiKhlopuk/SympleUI_DSM/contents/DSM.py",
         "GitHubToken": "",
-        "PyHandlers": "aW1wb3J0IGpzb24KCmlmIG5vdCBoYXNoTWFwLmNvbnRhaW5zS2V5KCJhIik6CiAgICBoYXNoTWFwLnB1dCgiYSIsICIiKQppZiBub3QgaGFzaE1hcC5jb250YWluc0tleSgiYiIpOgogICAgaGFzaE1hcC5wdXQoImIiLCAiIikKcmV0dXJuIGhhc2hNYXAKCgpkZWYgc2FtcGxlMV9vbl9pbnB1dChoYXNoTWFwLCBfZmlsZXM9Tm9uZSwgX2RhdGE9Tm9uZSk6CiAgICBpZiBoYXNoTWFwLmdldCgibGlzdGVuZXIiKSA9PSAiYnRuX3JlcyI6CiAgICAgICAgaGFzaE1hcC5wdXQoInRvYXN0Iiwgc3RyKGludChoYXNoTWFwLmdldCgiYSIpKSArIGludChoYXNoTWFwLmdldCgiYiIpKSkpCgogICAgcmV0dXJuIGhhc2hNYXA=",
+        "PyHandlers": "aW1wb3J0IGpzb24KCgpkZWYgc2FtcGxlMV9vbl9jcmVhdGUoaGFzaE1hcCwgX2ZpbGVzPU5vbmUsIF9kYXRhPU5vbmUpOgogICAgaWYgbm90IGhhc2hNYXAuY29udGFpbnNLZXkoImEiKToKICAgICAgICBoYXNoTWFwLnB1dCgiYSIsICIiKQogICAgaWYgbm90IGhhc2hNYXAuY29udGFpbnNLZXkoImIiKToKICAgICAgICBoYXNoTWFwLnB1dCgiYiIsICIiKQogICAgcmV0dXJuIGhhc2hNYXAKCgpkZWYgc2FtcGxlMV9vbl9pbnB1dChoYXNoTWFwLCBfZmlsZXM9Tm9uZSwgX2RhdGE9Tm9uZSk6CiAgICBpZiBoYXNoTWFwLmdldCgibGlzdGVuZXIiKSA9PSAiYnRuX3JlcyI6CiAgICAgICAgaGFzaE1hcC5wdXQoInRvYXN0Iiwgc3RyKGludChoYXNoTWFwLmdldCgiYSIpKSArIGludChoYXNoTWFwLmdldCgiYiIpKSkpCgogICAgcmV0dXJuIGhhc2hNYXAKCg==",
         "RunPython": true
     }
 }
